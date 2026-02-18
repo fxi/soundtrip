@@ -1,9 +1,9 @@
 {
   "name": "soundtrip",
-  "description": "Toy visualiser for SoundCloud",
+  "description": "Toy music visualizer",
   "tags": ["canvas", "audio", "visualization"],
-  "year_init": 2019,
-  "year_last": 2019,
+  "year_init": 2018,
+  "year_last": 2025,
   "url": "https://fxi.io/soundtrip/",
   "featured": false
 }

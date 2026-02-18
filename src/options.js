@@ -9,6 +9,11 @@ const mapMode = {
     mode: 'fft',
     bufferSize: 32,
     smoothing: 0.85
+  },
+  grid: {
+    mode: 'fft',
+    bufferSize: 32,
+    smoothing: 0.85
   }
 };
 const visualiser = {
@@ -26,7 +31,11 @@ const visualiser = {
   polarBaseRadius: 100,
   rainbowWidthFactor: 8,
   rainbowOffsetX: 0,
-  rainbowOffsetY: 0
+  rainbowOffsetY: 0,
+  gridRows: 20,
+  gridAmplitude: 1,
+  gridPerspective: 0.6,
+  gridSpacing: 20
 };
 const player = {
   url: defaultTrack,

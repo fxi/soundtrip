@@ -49,7 +49,7 @@ Controller.prototype.initGui = function() {
   gVis.add(oV, 'scaleFactor', 0.8, 1.2);
   gVis.add(oV, 'gravity', -20, 20);
   gVis.add(oV, 'rotateSpeed', -0.5, 0.5);
-  const gVisMode = gVis.add(oV, 'mode', ['polar', 'rainbow']);
+  const gVisMode = gVis.add(oV, 'mode', ['polar', 'rainbow', 'grid']);
   const gVisPolar = gVis.addFolder('polar mode');
   gVisPolar.close();
   gVisPolar.addColor(oV, 'polarColor');
@@ -61,8 +61,15 @@ Controller.prototype.initGui = function() {
   gVisRainbow.add(oV, 'rainbowWidthFactor', 5, 10);
   gVisRainbow.add(oV, 'rainbowOffsetX', -visWidth / 2, visWidth / 2);
   gVisRainbow.add(oV, 'rainbowOffsetY', -visHeight / 2, visHeight / 2);
+  const gVisGrid = gVis.addFolder('grid mode');
+  gVisGrid.add(oV, 'gridAmplitude', 0, 3);
+  gVisGrid.add(oV, 'gridRows', 4, 40).step(1);
+  gVisGrid.add(oV, 'gridPerspective', 0, 1);
+  gVisGrid.add(oV, 'gridSpacing', 5, 50);
   gVisPolar.hide();
   gVisPolar.close();
+  gVisGrid.hide();
+  gVisGrid.close();
 
   ctrl.gui = gui;
 
@@ -78,14 +85,18 @@ Controller.prototype.initGui = function() {
     for (var n in res) {
       player.setOption(n, res[n]);
     }
+    gVisPolar.hide();
+    gVisRainbow.hide();
+    gVisGrid.hide();
     if (mode === 'polar') {
       gVisPolar.show();
       gVisPolar.open();
-      gVisRainbow.hide();
+    } else if (mode === 'grid') {
+      gVisGrid.show();
+      gVisGrid.open();
     } else {
       gVisRainbow.show();
       gVisRainbow.open();
-      gVisPolar.hide();
     }
     player.updateMode();
     player.updateBufferSize();

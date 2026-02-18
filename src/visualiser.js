@@ -147,6 +147,8 @@ Visualiser.prototype.draw = function(data) {
   if (data) {
     if (vis.opt.mode === 'polar') {
       vis.drawPolar(data);
+    } else if (vis.opt.mode === 'grid') {
+      vis.drawGrid(data);
     } else {
       vis.drawRainbow(data);
     }
@@ -237,6 +239,57 @@ Visualiser.prototype.drawPolar = function(data) {
     vis.ctx.lineTo(x, y);
   }
   vis.ctx.stroke();
+};
+
+Visualiser.prototype.drawGrid = function(data) {
+  const vis = this;
+  const numCols = data.length;
+  const numRows = vis.opt.gridRows;
+  const amp = vis.opt.gridAmplitude;
+  const persp = vis.opt.gridPerspective;
+  const spacing = vis.opt.gridSpacing;
+  const colSpacing = 25;
+
+  const heights = data.map(function(v) {
+    return Math.max(0, 100 - Math.abs(v));
+  });
+
+  const grid = [];
+  for (let row = 0; row < numRows; row++) {
+    const t = row / (numRows - 1);
+    const scale = persp + (1 - persp) * t;
+    const rowY = vis.y - (numRows - 1) * spacing * 0.5 + row * spacing;
+    const points = [];
+    for (let col = 0; col < numCols; col++) {
+      const bx = vis.x + (col - (numCols - 1) / 2) * colSpacing * scale;
+      const dy = heights[col] * amp * scale;
+      points.push({x: bx, y: rowY - dy});
+    }
+    grid.push(points);
+  }
+
+  vis.ctx.lineWidth = 1;
+  for (let row = 0; row < numRows; row++) {
+    for (let col = 0; col < numCols; col++) {
+      const hue = (col / numCols) * 300;
+      const light = 30 + (heights[col] / 100) * 40;
+      const c = 'hsl(' + hue + ', 80%, ' + light + '%)';
+      vis.ctx.strokeStyle = c;
+
+      if (col < numCols - 1) {
+        vis.ctx.beginPath();
+        vis.ctx.moveTo(grid[row][col].x, grid[row][col].y);
+        vis.ctx.lineTo(grid[row][col + 1].x, grid[row][col + 1].y);
+        vis.ctx.stroke();
+      }
+      if (row < numRows - 1) {
+        vis.ctx.beginPath();
+        vis.ctx.moveTo(grid[row][col].x, grid[row][col].y);
+        vis.ctx.lineTo(grid[row + 1][col].x, grid[row + 1][col].y);
+        vis.ctx.stroke();
+      }
+    }
+  }
 };
 
 function toRgba(color, opacity) {
