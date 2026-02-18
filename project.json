@@ -3,7 +3,8 @@
   "description": "Toy music visualizer",
   "tags": ["canvas", "audio", "visualization"],
   "year_init": 2018,
-  "year_last": 2025,
+  "year_last": 2026,
+  "repo": "https://github.com/fxi/soundtrip",
   "url": "https://fxi.io/soundtrip/",
   "featured": false
 }
