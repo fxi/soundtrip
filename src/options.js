@@ -12,17 +12,18 @@ const mapMode = {
   }
 };
 const visualiser = {
-  backColor: [200, 200, 200],
-  polarColor: [10, 10, 10],
-  polarColorAuto: false,
+  backColor: [15,15,15],
+  polarColor: [129, 129, 129],
+  polarColorAuto: true,
   mode: 'rainbow',
-  backAlpha: 0.05,
+  backAlpha: 0.0002,
   scaleFactor: 1.02,
-  gravity: 0,
+  gravity: 1,
   rotateSpeed: 0.005,
   fadeAlpha: 0.005,
   polarLineWidth: 1,
-  polarBaseRadius: 250,
+  polarAmplitude: 0.4,
+  polarBaseRadius: 100,
   rainbowWidthFactor: 8,
   rainbowOffsetX: 0,
   rainbowOffsetY: 0

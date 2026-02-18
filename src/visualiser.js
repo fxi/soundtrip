@@ -162,7 +162,7 @@ Visualiser.prototype.drawRainbow = function(data) {
   const x = vis.x + ox;
   const y = vis.y + oy;
   const ws = data.map(function(v) {
-    return Math.round(100 - Math.abs(v)) / wf;
+    return Math.max(0, Math.round(100 - Math.abs(v))) / wf;
   });
   const dx = ws.reduce(function(a, v) { return v + a; }, 0) / 2;
   const l = ws.length;
@@ -183,7 +183,7 @@ Visualiser.prototype.drawRainbow = function(data) {
     let vn = {};
     vis.rainbowVerticesPrevious.forEach(function(vp, i) {
       vn = vertices[i];
-      const c = 'hsl(' + (i / (l - 1)) * 360 + ', 100%, 50%)';
+      const c = 'hsl(' + (i / l) * 300 + ', 100%, 50%)';
       vis.ctx.fillStyle = c;
       vis.ctx.strokeStyle = c;
       vis.ctx.beginPath();
@@ -231,7 +231,7 @@ Visualiser.prototype.drawPolar = function(data) {
     }
     v = data[j];
     theta = a * i + Math.PI / 2;
-    vd = r * (v + 1);
+    vd = r * (1 + v * vis.opt.polarAmplitude);
     x = vd * Math.cos(theta) + vis.x;
     y = vd * Math.sin(theta) + vis.y;
     vis.ctx.lineTo(x, y);

@@ -54,6 +54,7 @@ Controller.prototype.initGui = function() {
   gVisPolar.close();
   gVisPolar.addColor(oV, 'polarColor');
   gVisPolar.add(oV, 'polarColorAuto');
+  gVisPolar.add(oV, 'polarAmplitude', 0, 2);
   gVisPolar.add(oV, 'polarBaseRadius', 0, 300);
   gVisPolar.add(oV, 'polarLineWidth', 0, 5);
   const gVisRainbow = gVis.addFolder('rainbow mode');
