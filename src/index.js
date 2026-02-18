@@ -1,6 +1,5 @@
 /* jshint esversion:6 */
 import './style.css';
-//import {SoundCloud} from './soundcloud.js';
 import {Visualiser} from './visualiser.js';
 import {Player} from './player.js';
 import {Controller} from './controller.js';
@@ -17,30 +16,42 @@ function init() {
     elCanvas: elCanvas,
     width: window.innerWidth,
     height: window.innerHeight,
-    options : {}
+    options: {}
   });
 
   /**
    * Player
    */
   var player = new Player({
-    onData: visualiser.draw.bind(visualiser),
-    options : {}
+    options: {}
   });
 
   /**
-  * Controller
-  */
+   * Wire data: visualiser pulls from player when playing
+   */
+  visualiser.setDataSource(function() {
+    if (player.isPlaying()) {
+      return player.getData();
+    }
+    return null;
+  });
+
+  /**
+   * Start the always-running render loop
+   */
+  visualiser.start();
+
+  /**
+   * Controller
+   */
   window.controller = new Controller({
-    player : player,
-    visualiser : visualiser
+    player: player,
+    visualiser: visualiser
   });
 
-
   /**
-  * Listener
-  */
-
+   * Listeners
+   */
   elCanvas.addEventListener('mousemove', function(e) {
     visualiser.setPosition({
       x: e.clientX,

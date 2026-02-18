@@ -4,7 +4,6 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
  */
 import {Base} from './base.js';
-import {onNextFrame, cancelFrame} from './utils.js';
 import {player as options_player} from './options.js';
 
 export {Player};
@@ -13,7 +12,6 @@ function Player(config) {
   const p = this;
   p.setOptionsDefault(options_player);
   p.setOptions(config.options);
-  p.onData = config.onData;
   p.init();
   return p;
 }
@@ -23,16 +21,30 @@ Player.prototype = Object.create(Base.prototype);
 Player.prototype.init = function() {
   const p = this;
   p._playing = false;
-  p._idFrame = 0;
   p.elAudio = document.createElement('audio');
   p.elAudio.crossOrigin = 'anonymous';
+  p.elAudio.loop = true;
+};
+
+Player.prototype.loadFile = function(file) {
+  const p = this;
+  const wasPlaying = p._playing;
+  if (wasPlaying) {
+    p.pause();
+  }
+  const url = URL.createObjectURL(file);
+  p.opt.url = url;
+  p.elAudio.src = url;
+  if (wasPlaying) {
+    p.elAudio.oncanplay = function() {
+      p.elAudio.oncanplay = null;
+      p.play();
+    };
+  }
 };
 
 Player.prototype.checkContext = function() {
   const p = this;
-  /**
-   * Ctx created after user click
-   */
   if (!p.ctx) {
     p.ctx = new AudioContext();
     p.source = p.ctx.createMediaElementSource(p.elAudio);
@@ -74,9 +86,11 @@ Player.prototype.updateMode = function() {
 
 Player.prototype.getData = function() {
   const p = this;
+  if (!p.analyser || !p.data) {
+    return null;
+  }
 
   const changed = p.analyser.smoothingTimeConstant !== p.opt.smoothing;
-
   if (changed) {
     p.analyser.smoothingTimeConstant = p.opt.smoothing;
   }
@@ -88,6 +102,10 @@ Player.prototype.getData = function() {
   return p.data;
 };
 
+Player.prototype.isPlaying = function() {
+  return this._playing;
+};
+
 Player.prototype.play = function(enable) {
   const p = this;
   if (enable === false) {
@@ -96,13 +114,12 @@ Player.prototype.play = function(enable) {
     p.checkContext();
     p.elAudio.play();
     p._playing = true;
-    p.render();
   }
 };
+
 Player.prototype.pause = function() {
   const p = this;
   if (p._playing) {
-    cancelFrame(p._idFrame);
     p.elAudio.pause();
     p._playing = false;
   }
@@ -117,17 +134,7 @@ Player.prototype.toggle = function() {
   }
 };
 
-Player.prototype.render = function() {
+Player.prototype.setPlaybackRate = function(value) {
   const p = this;
-  if (!p._playing) {
-    return;
-  }
-  p.onData(p.getData(),p.opt);
-  p._idFrame = onNextFrame(p.render.bind(p));
+  p.elAudio.playbackRate = value * 1;
 };
-Player.prototype.setPlaybackRate = function(value){
-  const p = this;
-  p.elAudio.playbackRate = value*1;
-};
-
-
