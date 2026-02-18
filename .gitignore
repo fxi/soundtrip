@@ -3,6 +3,7 @@ node_modules/
 original/
 # Build output
 dist/
+.claude/
 
 # Cache
 .cache/
