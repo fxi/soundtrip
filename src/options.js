@@ -20,7 +20,7 @@ const visualiser = {
   backColor: [15,15,15],
   polarColor: [129, 129, 129],
   polarColorAuto: true,
-  mode: 'rainbow',
+  mode: 'polar',
   backAlpha: 0.0002,
   scaleFactor: 1.02,
   gravity: 1,
